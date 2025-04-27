@@ -8,86 +8,83 @@ class HomePageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text(
-                  'Nice to see you today!',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Nice to see you today!'),
+        backgroundColor: Colors.grey[900],
+        foregroundColor: Colors.white,
+      ),
+      
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
 
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+            const SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey[800],
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
                   ),
+                ],
+              ),
 
 
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Icon(
-                        Icons.camera_alt,
-                        size: 60,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Obtain some plants!',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Icon(
+                    Icons.camera_alt,
+                    size: 60,
+                    color: Colors.white,
                   ),
-                ),
-
-
-                const SizedBox(height: 20),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[700],
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child:
-                      Image(
-                        image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Obtain some plants!',
+                    style: TextStyle(color: Colors.white),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+
+
+            const SizedBox(height: 20),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[700],
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child:
+                  Image(
+                    image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
