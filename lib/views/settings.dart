@@ -17,21 +17,34 @@ class SettingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[800],
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Import App Data'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey[800],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: const EdgeInsets.all(24.0),
+                shadowColor: Color.fromRGBO(0, 0, 0, 0.2),
+                elevation: 5,
               ),
-              padding: const EdgeInsets.all(24.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -51,21 +64,34 @@ class SettingsPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[700],
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Export App Data'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey[700],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: const EdgeInsets.all(24.0),
+                shadowColor: Color.fromRGBO(0, 0, 0, 0.2),
+                elevation: 5,
               ),
-              padding: const EdgeInsets.all(24.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
