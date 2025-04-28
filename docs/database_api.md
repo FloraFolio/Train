@@ -23,6 +23,7 @@ CREATE TABLE plant_photos (
   photo_id TEXT PRIMARY KEY,    -- 照片唯一标识符
   species_id TEXT,              -- 植物种类ID (可能为空，等待AI解析)
   description TEXT,             -- 照片描述文本 (可能为空，等待AI解析)
+  introduction TEXT,            -- 植物简介 (可能为空，等待AI解析)
   photo_path TEXT NOT NULL,     -- 照片在文件系统中的路径
   status TEXT NOT NULL,         -- 照片解析状态：ANALYZING, SUCCESS, FAILED
   metadata TEXT,                -- JSON元数据（存储为TEXT）
@@ -41,7 +42,9 @@ CREATE INDEX idx_status ON plant_photos(status);
 CREATE TABLE species (
   species_id TEXT PRIMARY KEY,  -- 种类唯一标识符
   name TEXT NOT NULL,           -- 种类名称
-  description TEXT,             -- 种类描述
+  description TEXT,             -- 种类详细描述
+  introduction TEXT,            -- 种类简介
+  metadata TEXT,                -- 元数据（包含分类信息等）
   created_at INTEGER NOT NULL   -- 创建时间戳
 );
 ```
@@ -60,27 +63,29 @@ CREATE TABLE species (
 
 ```json
 {
-  "photo_id": "uuid-string",    // 照片唯一标识符
-  "species_id": "species-uuid", // 植物种类ID
-  "description": "植物描述文本", // 照片描述
-  "status": "ANALYZING",        // 照片解析状态：ANALYZING, SUCCESS, FAILED
-  "metadata": {                // 额外元数据
+  "photo_id": "uuid-string", 
+  "species_id": "species-uuid",
+  "description": "植物描述文本",
+  "status": "ANALYZING",
+  "metadata": {
     "location": {
       "latitude": 40.7128,
       "longitude": -74.0060
     },
     "captured_at": "2023-06-15T14:30:00Z",
     "tags": ["indoor", "flowering"],
-    "custom_attributes": {}     // 可扩展的自定义属性
+    "custom_attributes": {}
   }
 }
 ```
 
 ## API 接口文档
 
-### 1. 新增照片接口
+### 植物照片仓库接口 (PlantPhotoRepository)
 
-#### 函数签名
+#### 1. 新增照片接口
+
+##### 函数签名
 ```dart
 Future<String> addPlantPhoto({
   required File photoFile,
@@ -91,77 +96,79 @@ Future<String> addPlantPhoto({
 });
 ```
 
-#### 参数说明
+##### 参数说明
 - `photoFile`: 照片文件对象
 - `speciesId`: 植物种类ID (可选，可能等待AI解析后再设置)
 - `description`: 可选的照片描述 (可选，可能等待AI解析后再设置)
 - `status`: 照片解析状态，默认为ANALYZING
 - `additionalMetadata`: 可选的额外元数据
 
-#### 返回值
+##### 返回值
 - 成功：返回新创建的照片ID（String）
 - 失败：抛出异常
 
-#### 处理流程
+##### 处理流程
 1. 生成唯一的`photo_id`
 2. 保存照片到文件系统
 3. 构建完整的JSON元数据
 4. 在数据库中插入记录，状态为ANALYZING
 5. 返回照片ID
 
-### 2. 更新照片解析结果接口
+#### 2. 更新照片解析结果接口
 
-#### 函数签名
+##### 函数签名
 ```dart
 Future<bool> updatePhotoAnalysisResult({
   required String photoId,
   String? speciesId,
   String? description,
+  String? introduction,
   required PhotoStatus status,
   Map<String, dynamic>? additionalMetadata,
 });
 ```
 
-#### 参数说明
+##### 参数说明
 - `photoId`: 要更新的照片ID
 - `speciesId`: AI解析后获得的植物种类ID
-- `description`: AI解析后获得的描述文本
+- `description`: AI解析后获得的详细描述
+- `introduction`: AI解析后获得的植物简介
 - `status`: 照片解析状态（SUCCESS或FAILED）
 - `additionalMetadata`: 可选的额外元数据
 
-#### 返回值
+##### 返回值
 - 成功：返回true
 - 失败：抛出异常
 
-#### 处理流程
+##### 处理流程
 1. 在数据库中查询指定ID的照片记录
 2. 更新记录的种类ID、描述、状态和元数据
 3. 更新更新时间字段
 4. 保存更改
 
-### 3. 按照单个照片ID查询接口
+#### 3. 按照单个照片ID查询接口
 
-#### 函数签名
+##### 函数签名
 ```dart
 Future<PlantPhoto?> getPhotoById(String photoId);
 ```
 
-#### 参数说明
+##### 参数说明
 - `photoId`: 要查询的照片ID
 
-#### 返回值
+##### 返回值
 - 成功：返回`PlantPhoto`对象，包含照片信息和元数据
 - 未找到：返回`null`
 - 失败：抛出异常
 
-#### 处理流程
+##### 处理流程
 1. 在数据库中查询指定ID的照片记录
 2. 如果找到，构建并返回`PlantPhoto`对象
 3. 如果未找到，返回`null`
 
-### 4. 按照植物种类ID查询接口
+#### 4. 按照植物种类ID查询接口
 
-#### 函数签名
+##### 函数签名
 ```dart
 Future<List<PlantPhoto>> getPhotosBySpeciesId(
   String speciesId, {
@@ -171,26 +178,26 @@ Future<List<PlantPhoto>> getPhotosBySpeciesId(
 });
 ```
 
-#### 参数说明
+##### 参数说明
 - `speciesId`: 植物种类ID
 - `limit`: 可选，限制返回结果数量
 - `offset`: 可选，结果偏移量（用于分页）
 - `sortOrder`: 可选，排序方式（默认按最新时间排序）
 
-#### 返回值
+##### 返回值
 - 成功：返回`PlantPhoto`对象列表
 - 未找到：返回空列表
 - 失败：抛出异常
 
-#### 处理流程
+##### 处理流程
 1. 构建查询条件（WHERE species_id = ?）
 2. 添加排序、分页参数
 3. 执行查询
 4. 将结果映射为`PlantPhoto`对象列表
 
-### 5. 按照照片状态查询接口
+#### 5. 按照照片状态查询接口
 
-#### 函数签名
+##### 函数签名
 ```dart
 Future<List<PlantPhoto>> getPhotosByStatus(
   PhotoStatus status, {
@@ -200,22 +207,228 @@ Future<List<PlantPhoto>> getPhotosByStatus(
 });
 ```
 
-#### 参数说明
+##### 参数说明
 - `status`: 照片解析状态（ANALYZING, SUCCESS, FAILED）
 - `limit`: 可选，限制返回结果数量
 - `offset`: 可选，结果偏移量（用于分页）
 - `sortOrder`: 可选，排序方式（默认按最新时间排序）
 
-#### 返回值
+##### 返回值
 - 成功：返回`PlantPhoto`对象列表
 - 未找到：返回空列表
 - 失败：抛出异常
 
-#### 处理流程
+##### 处理流程
 1. 构建查询条件（WHERE status = ?）
 2. 添加排序、分页参数
 3. 执行查询
 4. 将结果映射为`PlantPhoto`对象列表
+
+#### 6. 获取所有照片接口
+
+##### 函数签名
+```dart
+Future<List<PlantPhoto>> getAllPhotos({
+  int? limit,
+  int? offset,
+  SortOrder sortOrder = SortOrder.newest,
+});
+```
+
+##### 参数说明
+- `limit`: 可选，限制返回结果数量
+- `offset`: 可选，结果偏移量（用于分页）
+- `sortOrder`: 可选，排序方式（默认按最新时间排序）
+
+##### 返回值
+- 成功：返回`PlantPhoto`对象列表
+- 未找到：返回空列表
+- 失败：抛出异常
+
+##### 处理流程
+1. 构建查询
+2. 添加排序、分页参数
+3. 执行查询
+4. 将结果映射为`PlantPhoto`对象列表
+
+#### 7. 删除照片接口
+
+##### 函数签名
+```dart
+Future<bool> deletePhoto(String photoId);
+```
+
+##### 参数说明
+- `photoId`: 要删除的照片ID
+
+##### 返回值
+- 成功：返回`true`
+- 失败：返回`false`或抛出异常
+
+##### 处理流程
+1. 在数据库中查询指定ID的照片记录
+2. 删除文件系统中的照片文件
+3. 从数据库中删除照片记录
+4. 返回操作结果
+
+### 照片分析服务接口 (PhotoAnalysisService)
+
+#### 1. 照片分析接口
+
+##### 函数签名
+```dart
+Future<PhotoAnalysisResult> analyzePhoto(File photoFile);
+```
+
+##### 参数说明
+- `photoFile`: 要分析的照片文件
+
+##### 返回值
+- 成功：返回`PhotoAnalysisResult`对象，包含分析结果
+- 失败：返回带有错误信息的`PhotoAnalysisResult`对象
+
+##### 处理流程
+1. 读取照片数据
+2. 调用AI模型进行分析
+3. 解析API响应
+4. 构建并返回分析结果
+
+### 照片管理服务接口 (PhotoManagerService)
+
+#### 1. 处理新照片接口
+
+##### 函数签名
+```dart
+Future<String> processNewPhoto(File photoFile);
+```
+
+##### 参数说明
+- `photoFile`: 要处理的照片文件
+
+##### 返回值
+- 成功：返回新创建的照片ID（String）
+- 失败：抛出异常
+
+##### 处理流程
+1. 添加照片到数据库，状态为ANALYZING
+2. 异步启动AI分析任务（不等待完成）
+3. 返回照片ID
+
+#### 2. 获取照片接口
+
+##### 函数签名
+```dart
+Future<PlantPhoto?> getPhoto(String photoId);
+```
+
+##### 参数说明
+- `photoId`: 要获取的照片ID
+
+##### 返回值
+- 成功：返回`PlantPhoto`对象
+- 未找到：返回`null`
+- 失败：抛出异常
+
+##### 处理流程
+1. 调用仓库的getPhotoById方法
+2. 返回查询结果
+
+#### 3. 获取所有照片接口
+
+##### 函数签名
+```dart
+Future<List<PlantPhoto>> getAllPhotos({
+  int? limit,
+  int? offset,
+  SortOrder sortOrder = SortOrder.newest,
+});
+```
+
+##### 参数说明
+- `limit`: 可选，限制返回结果数量
+- `offset`: 可选，结果偏移量（用于分页）
+- `sortOrder`: 可选，排序方式（默认按最新时间排序）
+
+##### 返回值
+- 成功：返回`PlantPhoto`对象列表
+- 未找到：返回空列表
+- 失败：抛出异常
+
+##### 处理流程
+1. 调用仓库的getAllPhotos方法
+2. 返回查询结果
+
+#### 4. 获取指定状态的照片接口
+
+##### 函数签名
+```dart
+Future<List<PlantPhoto>> getPhotosByStatus(
+  PhotoStatus status, {
+  int? limit,
+  int? offset,
+  SortOrder sortOrder = SortOrder.newest,
+});
+```
+
+##### 参数说明
+- `status`: 照片解析状态
+- `limit`: 可选，限制返回结果数量
+- `offset`: 可选，结果偏移量（用于分页）
+- `sortOrder`: 可选，排序方式（默认按最新时间排序）
+
+##### 返回值
+- 成功：返回`PlantPhoto`对象列表
+- 未找到：返回空列表
+- 失败：抛出异常
+
+##### 处理流程
+1. 调用仓库的getPhotosByStatus方法
+2. 返回查询结果
+
+#### 5. 获取指定种类的照片接口
+
+##### 函数签名
+```dart
+Future<List<PlantPhoto>> getPhotosBySpecies(
+  String speciesId, {
+  int? limit,
+  int? offset,
+  SortOrder sortOrder = SortOrder.newest,
+});
+```
+
+##### 参数说明
+- `speciesId`: 植物种类ID
+- `limit`: 可选，限制返回结果数量
+- `offset`: 可选，结果偏移量（用于分页）
+- `sortOrder`: 可选，排序方式（默认按最新时间排序）
+
+##### 返回值
+- 成功：返回`PlantPhoto`对象列表
+- 未找到：返回空列表
+- 失败：抛出异常
+
+##### 处理流程
+1. 调用仓库的getPhotosBySpeciesId方法
+2. 返回查询结果
+
+#### 6. 删除照片接口
+
+##### 函数签名
+```dart
+Future<bool> deletePhoto(String photoId);
+```
+
+##### 参数说明
+- `photoId`: 要删除的照片ID
+
+##### 返回值
+- 成功：返回`true`
+- 失败：返回`false`或抛出异常
+
+##### 处理流程
+1. 调用仓库的deletePhoto方法
+2. 返回操作结果
 
 ## 数据模型
 
@@ -263,6 +476,7 @@ class PlantPhoto {
   final String photoId;
   final String? speciesId;  // 可空，因为可能等待AI解析
   final String? description; // 可空，因为可能等待AI解析
+  final String? introduction; // 可空，因为可能等待AI解析
   final String photoPath;
   final PhotoStatus status;  // 照片解析状态
   final Map<String, dynamic> metadata;
@@ -274,6 +488,7 @@ class PlantPhoto {
     required this.photoId,
     this.speciesId,
     this.description,
+    this.introduction,
     required this.photoPath,
     required this.status,
     required this.metadata,
@@ -287,6 +502,7 @@ class PlantPhoto {
       photoId: map['photo_id'],
       speciesId: map['species_id'],
       description: map['description'],
+      introduction: map['introduction'],
       photoPath: map['photo_path'],
       status: PhotoStatusExtension.fromString(map['status']),
       metadata: jsonDecode(map['metadata'] ?? '{}'),
@@ -303,6 +519,7 @@ class PlantPhoto {
       'photo_id': photoId,
       'species_id': speciesId,
       'description': description,
+      'introduction': introduction,
       'photo_path': photoPath,
       'status': status.value,
       'metadata': jsonEncode(metadata),
@@ -318,5 +535,73 @@ enum SortOrder {
   oldest,
   nameAsc,
   nameDesc,
+}
+```
+
+### 照片分析结果模型
+
+```dart
+class PhotoAnalysisResult {
+  /// 分析是否成功
+  final bool success;
+  
+  /// 植物种类ID（成功时有效）
+  final String? speciesId;
+  
+  /// 植物名称（成功时有效）
+  final String? speciesName;
+  
+  /// 详细描述文本（成功时有效）
+  final String? description;
+  
+  /// 植物简介（成功时有效）
+  final String? introduction;
+  
+  /// 完整的分析结果数据
+  final Map<String, dynamic> data;
+  
+  /// 错误信息（失败时有效）
+  final String? errorMessage;
+
+  /// 构造函数
+  PhotoAnalysisResult({
+    required this.success,
+    this.speciesId,
+    this.speciesName,
+    this.description,
+    this.introduction,
+    required this.data,
+    this.errorMessage,
+  });
+
+  /// 创建成功结果
+  factory PhotoAnalysisResult.success({
+    required String speciesId,
+    required String speciesName,
+    required String description,
+    required String introduction,
+    required Map<String, dynamic> data,
+  }) {
+    return PhotoAnalysisResult(
+      success: true,
+      speciesId: speciesId,
+      speciesName: speciesName,
+      description: description,
+      introduction: introduction,
+      data: data,
+    );
+  }
+
+  /// 创建失败结果
+  factory PhotoAnalysisResult.failure({
+    required String errorMessage,
+    Map<String, dynamic>? data,
+  }) {
+    return PhotoAnalysisResult(
+      success: false,
+      data: data ?? {'error': errorMessage},
+      errorMessage: errorMessage,
+    );
+  }
 }
 ```
