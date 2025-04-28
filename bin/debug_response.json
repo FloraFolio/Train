@@ -1,0 +1,38 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"species\": {\n    \"界\": \"植物界\",\n    \"门\": \"被子植物门\",\n    \"纲\": \"双子叶植物纲\",\n    \"目\": \"山龙眼目\",\n    \"科\": \"莲科\",\n    \"属\": \"莲属\",\n    \"种\": \"莲\"\n  },\n  \"introduction\": \"莲（学名：Nelumbo nucifera），又称荷花、芙蕖、水芙蓉等，是莲科莲属多年生水生草本植物。原产于亚洲，广泛分布于中国、印度、日本、俄罗斯等地。莲具有很高的观赏价值，其花朵美丽，颜色多样，常被种植于公园、池塘等水景中。此外，莲的根茎（藕）、种子（莲子）、叶（荷叶）等均可食用或药用，具有丰富的营养价值和药用功效。莲文化在中国源远流长，被视为纯洁、高雅的象征，常与佛教文化联系在一起。\",\n  \"detailed_description\": \"图片中展现的是一朵盛开的粉色莲花。花瓣呈粉红色，颜色由花瓣中心向边缘逐渐变浅，呈现出一种柔和的渐变效果。花瓣排列整齐，层层叠叠，包裹着中心的莲蓬。莲蓬呈嫩绿色，上面布满了许多小孔，每个小孔中都含有一颗莲子。花瓣的质地看起来柔软光滑，边缘略微卷曲。花朵整体姿态优雅，展现出莲花的独特魅力。背景是翠绿色的荷叶，与粉色莲花形成鲜明对比，衬托出花朵的美丽。光线柔和，使得整张图片显得宁静祥和。\"\n}\n```\n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.15155904029512773
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 359,
+    "candidatesTokenCount": 389,
+    "totalTokenCount": 748,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 101
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 258
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 389
+      }
+    ]
+  },
+  "modelVersion": "gemini-1.5-flash"
+}
