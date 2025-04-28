@@ -1,10 +1,28 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-
-class HomePageContent extends StatelessWidget {
+class HomePageContent extends StatefulWidget {
   const HomePageContent({super.key});
+
+  @override
+  _HomePageContentState createState() => _HomePageContentState();
+}
+
+class _HomePageContentState extends State<HomePageContent> {
+  File? _image;
+
+  // 打开相机拍照
+  Future<void> _getImageFromCamera() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +32,11 @@ class HomePageContent extends StatelessWidget {
         backgroundColor: Colors.grey[900],
         foregroundColor: Colors.white,
       ),
-      
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-
             const SizedBox(height: 20),
             Container(
               width: double.infinity,
@@ -35,26 +52,32 @@ class HomePageContent extends StatelessWidget {
                   ),
                 ],
               ),
-
-
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Icon(
-                    Icons.camera_alt,
-                    size: 60,
-                    color: Colors.white,
-                  ),
+                  const Icon(Icons.camera_alt, size: 60, color: Colors.white),
                   const SizedBox(height: 8),
                   const Text(
                     'Obtain some plants!',
                     style: TextStyle(color: Colors.white),
                   ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _getImageFromCamera,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueGrey,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: const Text('Take a Picture'),
+                  ),
                 ],
               ),
             ),
-
 
             const SizedBox(height: 20),
             Expanded(
@@ -75,10 +98,13 @@ class HomePageContent extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Center(
                   child:
-                  Image(
-                    image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                    fit: BoxFit.contain,
-                  ),
+                      _image == null
+                          ? const Text(
+                            'No image captured yet.',
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          )
+                          : Image.file(_image!, fit: BoxFit.contain),
                 ),
               ),
             ),
