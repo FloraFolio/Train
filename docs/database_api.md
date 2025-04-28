@@ -74,7 +74,7 @@ CREATE TABLE species (
     },
     "captured_at": "2023-06-15T14:30:00Z",
     "tags": ["indoor", "flowering"],
-    "custom_attributes": {}     // 可扩展的自定义属性
+    "custom_attributes": {}         -- 可扩展的自定义属性
   }
 }
 ```
