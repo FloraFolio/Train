@@ -63,11 +63,11 @@ CREATE TABLE species (
 
 ```json
 {
-  "photo_id": "uuid-string",    // 照片唯一标识符
-  "species_id": "species-uuid", // 植物种类ID
-  "description": "植物描述文本", // 照片描述
-  "status": "ANALYZING",        // 照片解析状态：ANALYZING, SUCCESS, FAILED
-  "metadata": {                // 额外元数据
+  "photo_id": "uuid-string",        -- 照片唯一标识符
+  "species_id": "species-uuid",     -- 植物种类ID
+  "description": "植物描述文本",      -- 照片描述
+  "status": "ANALYZING",            -- 照片解析状态：ANALYZING, SUCCESS, FAILED
+  "metadata": {                     -- 额外元数据
     "location": {
       "latitude": 40.7128,
       "longitude": -74.0060
