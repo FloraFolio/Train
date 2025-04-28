@@ -26,6 +26,7 @@ class PlantPhotoRepositoryImpl implements PlantPhotoRepository {
     required File photoFile,
     String? speciesId,
     String? description,
+    String? introduction,
     PhotoStatus status = PhotoStatus.ANALYZING,
     Map<String, dynamic>? additionalMetadata,
   }) async {
@@ -46,6 +47,7 @@ class PlantPhotoRepositoryImpl implements PlantPhotoRepository {
       photoId: photoId,
       speciesId: speciesId,
       description: description,
+      introduction: introduction,
       photoPath: photoPath,
       status: status,
       metadata: metadata,
@@ -63,6 +65,7 @@ class PlantPhotoRepositoryImpl implements PlantPhotoRepository {
     required String photoId,
     String? speciesId,
     String? description,
+    String? introduction,
     required PhotoStatus status,
     Map<String, dynamic>? additionalMetadata,
   }) async {
@@ -84,6 +87,7 @@ class PlantPhotoRepositoryImpl implements PlantPhotoRepository {
     final updatedPhoto = photo.copyWith(
       speciesId: speciesId,
       description: description,
+      introduction: introduction,
       status: status,
       metadata: metadata,
       updatedAt: DateTime.now(),

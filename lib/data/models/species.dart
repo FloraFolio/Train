@@ -8,8 +8,11 @@ class Species {
   /// 种类名称
   final String name;
   
-  /// 种类描述
+  /// 种类详细描述
   final String? description;
+  
+  /// 种类简介
+  final String? introduction;
   
   /// 元数据
   final Map<String, dynamic> metadata;
@@ -22,6 +25,7 @@ class Species {
     required this.speciesId,
     required this.name,
     this.description,
+    this.introduction,
     Map<String, dynamic>? metadata,
     required this.createdAt,
   }) : metadata = metadata ?? {};
@@ -46,6 +50,7 @@ class Species {
       speciesId: map['species_id'],
       name: map['name'],
       description: map['description'],
+      introduction: map['introduction'],
       metadata: metadata,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at']),
     );
@@ -57,6 +62,7 @@ class Species {
       'species_id': speciesId,
       'name': name,
       'description': description,
+      'introduction': introduction,
       'metadata': jsonEncode(metadata),
       'created_at': createdAt.millisecondsSinceEpoch,
     };
@@ -66,12 +72,14 @@ class Species {
   Species copyWith({
     String? name,
     String? description,
+    String? introduction,
     Map<String, dynamic>? metadata,
   }) {
     return Species(
       speciesId: this.speciesId,
       name: name ?? this.name,
       description: description ?? this.description,
+      introduction: introduction ?? this.introduction,
       metadata: metadata ?? this.metadata,
       createdAt: this.createdAt,
     );

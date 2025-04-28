@@ -23,6 +23,7 @@ CREATE TABLE plant_photos (
   photo_id TEXT PRIMARY KEY,    -- 照片唯一标识符
   species_id TEXT,              -- 植物种类ID (可能为空，等待AI解析)
   description TEXT,             -- 照片描述文本 (可能为空，等待AI解析)
+  introduction TEXT,            -- 植物简介 (可能为空，等待AI解析)
   photo_path TEXT NOT NULL,     -- 照片在文件系统中的路径
   status TEXT NOT NULL,         -- 照片解析状态：ANALYZING, SUCCESS, FAILED
   metadata TEXT,                -- JSON元数据（存储为TEXT）
@@ -41,7 +42,9 @@ CREATE INDEX idx_status ON plant_photos(status);
 CREATE TABLE species (
   species_id TEXT PRIMARY KEY,  -- 种类唯一标识符
   name TEXT NOT NULL,           -- 种类名称
-  description TEXT,             -- 种类描述
+  description TEXT,             -- 种类详细描述
+  introduction TEXT,            -- 种类简介
+  metadata TEXT,                -- 元数据（包含分类信息等）
   created_at INTEGER NOT NULL   -- 创建时间戳
 );
 ```
@@ -119,6 +122,7 @@ Future<bool> updatePhotoAnalysisResult({
   required String photoId,
   String? speciesId,
   String? description,
+  String? introduction,
   required PhotoStatus status,
   Map<String, dynamic>? additionalMetadata,
 });
@@ -127,7 +131,8 @@ Future<bool> updatePhotoAnalysisResult({
 ##### 参数说明
 - `photoId`: 要更新的照片ID
 - `speciesId`: AI解析后获得的植物种类ID
-- `description`: AI解析后获得的描述文本
+- `description`: AI解析后获得的详细描述
+- `introduction`: AI解析后获得的植物简介
 - `status`: 照片解析状态（SUCCESS或FAILED）
 - `additionalMetadata`: 可选的额外元数据
 
@@ -471,6 +476,7 @@ class PlantPhoto {
   final String photoId;
   final String? speciesId;  // 可空，因为可能等待AI解析
   final String? description; // 可空，因为可能等待AI解析
+  final String? introduction; // 可空，因为可能等待AI解析
   final String photoPath;
   final PhotoStatus status;  // 照片解析状态
   final Map<String, dynamic> metadata;
@@ -482,6 +488,7 @@ class PlantPhoto {
     required this.photoId,
     this.speciesId,
     this.description,
+    this.introduction,
     required this.photoPath,
     required this.status,
     required this.metadata,
@@ -495,6 +502,7 @@ class PlantPhoto {
       photoId: map['photo_id'],
       speciesId: map['species_id'],
       description: map['description'],
+      introduction: map['introduction'],
       photoPath: map['photo_path'],
       status: PhotoStatusExtension.fromString(map['status']),
       metadata: jsonDecode(map['metadata'] ?? '{}'),
@@ -511,6 +519,7 @@ class PlantPhoto {
       'photo_id': photoId,
       'species_id': speciesId,
       'description': description,
+      'introduction': introduction,
       'photo_path': photoPath,
       'status': status.value,
       'metadata': jsonEncode(metadata),
@@ -542,8 +551,11 @@ class PhotoAnalysisResult {
   /// 植物名称（成功时有效）
   final String? speciesName;
   
-  /// 描述文本（成功时有效）
+  /// 详细描述文本（成功时有效）
   final String? description;
+  
+  /// 植物简介（成功时有效）
+  final String? introduction;
   
   /// 完整的分析结果数据
   final Map<String, dynamic> data;
@@ -557,6 +569,7 @@ class PhotoAnalysisResult {
     this.speciesId,
     this.speciesName,
     this.description,
+    this.introduction,
     required this.data,
     this.errorMessage,
   });
@@ -566,6 +579,7 @@ class PhotoAnalysisResult {
     required String speciesId,
     required String speciesName,
     required String description,
+    required String introduction,
     required Map<String, dynamic> data,
   }) {
     return PhotoAnalysisResult(
@@ -573,6 +587,7 @@ class PhotoAnalysisResult {
       speciesId: speciesId,
       speciesName: speciesName,
       description: description,
+      introduction: introduction,
       data: data,
     );
   }

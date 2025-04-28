@@ -6,6 +6,7 @@ abstract class SpeciesRepository {
   Future<String> addSpecies({
     required String name,
     String? description,
+    String? introduction,
     String? taxonomyPath,
     Map<String, dynamic>? taxonomyData,
   });

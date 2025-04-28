@@ -11,8 +11,11 @@ class PhotoAnalysisResult {
   /// 植物名称（成功时有效）
   final String? speciesName;
   
-  /// 描述文本（成功时有效）
+  /// 详细描述文本（成功时有效）
   final String? description;
+  
+  /// 植物简介（成功时有效）
+  final String? introduction;
   
   /// 完整的分析结果数据
   final Map<String, dynamic> data;
@@ -26,6 +29,7 @@ class PhotoAnalysisResult {
     this.speciesId,
     this.speciesName,
     this.description,
+    this.introduction,
     required this.data,
     this.errorMessage,
   });
@@ -35,6 +39,7 @@ class PhotoAnalysisResult {
     required String speciesId,
     required String speciesName,
     required String description,
+    required String introduction,
     required Map<String, dynamic> data,
   }) {
     return PhotoAnalysisResult(
@@ -42,6 +47,7 @@ class PhotoAnalysisResult {
       speciesId: speciesId,
       speciesName: speciesName,
       description: description,
+      introduction: introduction,
       data: data,
     );
   }

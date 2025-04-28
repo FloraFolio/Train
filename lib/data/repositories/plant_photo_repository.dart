@@ -9,6 +9,7 @@ abstract class PlantPhotoRepository {
     required File photoFile,
     String? speciesId,
     String? description,
+    String? introduction,
     PhotoStatus status = PhotoStatus.ANALYZING,
     Map<String, dynamic>? additionalMetadata,
   });
@@ -18,6 +19,7 @@ abstract class PlantPhotoRepository {
     required String photoId,
     String? speciesId,
     String? description,
+    String? introduction,
     required PhotoStatus status,
     Map<String, dynamic>? additionalMetadata,
   });

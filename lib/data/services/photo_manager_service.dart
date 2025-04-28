@@ -44,6 +44,7 @@ class PhotoManagerService {
           photoId: photoId,
           speciesId: analysisResult.speciesId,
           description: analysisResult.description,
+          introduction: analysisResult.introduction,
           status: PhotoStatus.SUCCESS,
           additionalMetadata: analysisResult.data,
         );

@@ -9,8 +9,11 @@ class PlantPhoto {
   /// 植物种类ID (可能为空，等待AI解析)
   final String? speciesId;
   
-  /// 照片描述文本 (可能为空，等待AI解析)
+  /// 照片详细描述文本 (可能为空，等待AI解析)
   final String? description;
+  
+  /// 植物简介 (可能为空，等待AI解析)
+  final String? introduction;
   
   /// 照片在文件系统中的路径
   final String photoPath;
@@ -32,6 +35,7 @@ class PlantPhoto {
     required this.photoId,
     this.speciesId,
     this.description,
+    this.introduction,
     required this.photoPath,
     required this.status,
     required this.metadata,
@@ -45,6 +49,7 @@ class PlantPhoto {
       photoId: map['photo_id'],
       speciesId: map['species_id'],
       description: map['description'],
+      introduction: map['introduction'],
       photoPath: map['photo_path'],
       status: PhotoStatusExtension.fromString(map['status']),
       metadata: map['metadata'] != null ? jsonDecode(map['metadata']) : {},
@@ -61,6 +66,7 @@ class PlantPhoto {
       'photo_id': photoId,
       'species_id': speciesId,
       'description': description,
+      'introduction': introduction,
       'photo_path': photoPath,
       'status': status.value,
       'metadata': jsonEncode(metadata),
@@ -74,6 +80,7 @@ class PlantPhoto {
     String? photoId,
     String? speciesId,
     String? description,
+    String? introduction,
     String? photoPath,
     PhotoStatus? status,
     Map<String, dynamic>? metadata,
@@ -84,6 +91,7 @@ class PlantPhoto {
       photoId: photoId ?? this.photoId,
       speciesId: speciesId ?? this.speciesId,
       description: description ?? this.description,
+      introduction: introduction ?? this.introduction,
       photoPath: photoPath ?? this.photoPath,
       status: status ?? this.status,
       metadata: metadata ?? this.metadata,

@@ -56,16 +56,15 @@ class GeminiPhotoAnalysisService implements PhotoAnalysisService {
           final taxonomyInfo = _extractTaxonomyInfo(plantData['species']);
           
           // 获取简介和详细描述
-          final introduction = plantData['introduction'] ?? '无描述';
-          final detailedDescription = plantData['detailed_description'] ?? '';
+          final introduction = plantData['introduction'] ?? '无简介';
+          final detailedDescription = plantData['detailed_description'] ?? '无详细描述';
           
-          // 合并描述与详细描述
-          final fullDescription = '$introduction\n\n$detailedDescription';
-          
-          // 添加到species表
+          // 添加到species表，让仓库决定是创建新记录还是更新现有记录
+          // 仓库会处理重复种类的情况，并决定是否用更详细的信息更新现有记录
           final speciesId = await _speciesRepository.addSpecies(
             name: taxonomyInfo.displayName,
-            description: fullDescription,
+            description: detailedDescription,
+            introduction: introduction,
             taxonomyPath: taxonomyInfo.taxonomyPath,
             taxonomyData: taxonomyInfo.taxonomyData,
           );
@@ -79,7 +78,8 @@ class GeminiPhotoAnalysisService implements PhotoAnalysisService {
           return PhotoAnalysisResult.success(
             speciesId: speciesId,
             speciesName: taxonomyInfo.displayName,
-            description: fullDescription,
+            description: detailedDescription,
+            introduction: introduction,
             data: completeData,
           );
         } else {
@@ -98,13 +98,15 @@ class GeminiPhotoAnalysisService implements PhotoAnalysisService {
             // 尝试从提取的数据中获取分类信息
             final taxonomyInfo = _extractTaxonomyInfo(extractedData['species']);
             
-            // 获取简介
-            final description = extractedData['introduction'] ?? '无描述';
+            // 获取简介和详细描述
+            final introduction = extractedData['introduction'] ?? '无简介';
+            final detailedDescription = extractedData['detailed_description'] ?? '无详细描述';
             
-            // 添加到species表
+            // 添加到species表，让仓库决定是创建新记录还是更新现有记录
             final speciesId = await _speciesRepository.addSpecies(
               name: taxonomyInfo.displayName,
-              description: description,
+              description: detailedDescription,
+              introduction: introduction,
               taxonomyPath: taxonomyInfo.taxonomyPath,
               taxonomyData: taxonomyInfo.taxonomyData,
             );
@@ -117,10 +119,43 @@ class GeminiPhotoAnalysisService implements PhotoAnalysisService {
             return PhotoAnalysisResult.success(
               speciesId: speciesId,
               speciesName: taxonomyInfo.displayName,
-              description: description,
+              description: detailedDescription,
+              introduction: introduction,
               data: extractedData,
             );
           } else {
+            // 找不到物种信息但有其他数据，尝试作为未知物种处理
+            if (extractedData.isNotEmpty) {
+              // 创建一个未知物种的记录
+              final taxonomyInfo = TaxonomyInfo(
+                displayName: extractedData['name'] ?? '未知植物',
+                taxonomyPath: 'unknown',
+                taxonomyData: {'未知': true},
+              );
+              
+              final description = extractedData['description'] ?? 
+                                  extractedData['detailed_description'] ?? '无详细描述';
+              final introduction = extractedData['introduction'] ?? '无简介';
+              
+              // 添加到species表
+              final speciesId = await _speciesRepository.addSpecies(
+                name: taxonomyInfo.displayName,
+                description: description,
+                introduction: introduction,
+                taxonomyPath: taxonomyInfo.taxonomyPath,
+                taxonomyData: taxonomyInfo.taxonomyData,
+              );
+              
+              // 返回结果
+              return PhotoAnalysisResult.success(
+                speciesId: speciesId,
+                speciesName: taxonomyInfo.displayName,
+                description: description,
+                introduction: introduction,
+                data: extractedData,
+              );
+            }
+            
             return PhotoAnalysisResult.failure(
               errorMessage: '解析AI响应失败: $jsonError',
               data: {'raw_response': textResponse},

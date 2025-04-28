@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 /// 数据库助手类，负责管理SQLite数据库
 class DatabaseHelper {
   static const _databaseName = "flora_folio.db";
-  static const _databaseVersion = 2;  // 更新版本号
+  static const _databaseVersion = 3;  // 更新版本号
 
   // 单例模式
   DatabaseHelper._privateConstructor();
@@ -44,6 +44,7 @@ class DatabaseHelper {
         photo_id TEXT PRIMARY KEY,
         species_id TEXT,
         description TEXT,
+        introduction TEXT,
         photo_path TEXT NOT NULL,
         status TEXT NOT NULL,
         metadata TEXT,
@@ -62,12 +63,13 @@ class DatabaseHelper {
       'CREATE INDEX idx_status ON plant_photos(status)'
     );
 
-    // 植物种类表 - 添加metadata字段
+    // 植物种类表
     await db.execute('''
       CREATE TABLE species (
         species_id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         description TEXT,
+        introduction TEXT,
         metadata TEXT,
         created_at INTEGER NOT NULL
       )
@@ -81,6 +83,17 @@ class DatabaseHelper {
       try {
         await db.execute('ALTER TABLE species ADD COLUMN metadata TEXT');
         print('数据库升级成功: 添加metadata字段到species表');
+      } catch (e) {
+        print('数据库升级错误: $e');
+      }
+    }
+    
+    if (oldVersion < 3) {
+      // 版本2到版本3的升级：添加introduction字段到各表
+      try {
+        await db.execute('ALTER TABLE plant_photos ADD COLUMN introduction TEXT');
+        await db.execute('ALTER TABLE species ADD COLUMN introduction TEXT');
+        print('数据库升级成功: 添加introduction字段到相关表');
       } catch (e) {
         print('数据库升级错误: $e');
       }
