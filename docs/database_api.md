@@ -63,18 +63,18 @@ CREATE TABLE species (
 
 ```json
 {
-  "photo_id": "uuid-string",        -- 照片唯一标识符
-  "species_id": "species-uuid",     -- 植物种类ID
-  "description": "植物描述文本",      -- 照片描述
-  "status": "ANALYZING",            -- 照片解析状态：ANALYZING, SUCCESS, FAILED
-  "metadata": {                     -- 额外元数据
+  "photo_id": "uuid-string", 
+  "species_id": "species-uuid",
+  "description": "植物描述文本",
+  "status": "ANALYZING",
+  "metadata": {
     "location": {
       "latitude": 40.7128,
       "longitude": -74.0060
     },
     "captured_at": "2023-06-15T14:30:00Z",
     "tags": ["indoor", "flowering"],
-    "custom_attributes": {}         -- 可扩展的自定义属性
+    "custom_attributes": {}
   }
 }
 ```
