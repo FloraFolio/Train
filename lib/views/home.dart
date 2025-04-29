@@ -12,6 +12,7 @@ class HomePageContent extends StatefulWidget {
 
 class _HomePageContentState extends State<HomePageContent> {
   File? _image;
+  final PlantPhotoRepositoryImpl _photoRepository = PlantPhotoRepositoryImpl();
 
   // 打开相机拍照
   Future<void> _getImageFromCamera() async {
@@ -22,9 +23,25 @@ class _HomePageContentState extends State<HomePageContent> {
       setState(() {
         _image = File(pickedFile.path);
       });
-    }
 
-    addPlantPhoto(_image);
+      // Saving the photo to local and post it to gemini
+      try {
+        // 使用repository添加照片
+        final photoId = await _photoRepository.addPlantPhoto(photoFile: _image!);
+        print('Photo added successfully with ID: $photoId');
+        
+        // 这里可以添加其他逻辑（比如导航到结果页面）
+      } catch (e) {
+        print('Error adding plant photo: $e');
+        // 可以添加错误处理比如显示SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving photo: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
