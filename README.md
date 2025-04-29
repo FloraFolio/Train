@@ -25,3 +25,7 @@ flutter packages get
 flutter packages upgrade
 ```
 Then restart vscode or android studio and so on.
+
+When you compile the code remember copy the `/lib/config/api_config.example.dart` and paste it to `/lib/config/api_config.dart`
+
+And add your gemini API to the correspond place.  

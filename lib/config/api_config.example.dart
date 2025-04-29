@@ -1,7 +1,7 @@
 /// API配置
 class ApiConfig {
   /// Gemini API密钥
-  static const String geminiApiKey = "your gemini api key";
+  static const String geminiApiKey = "<your gemini api key>";
   
   /// Gemini API端点
   static const String geminiApiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent";
