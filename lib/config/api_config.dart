@@ -1,19 +1,7 @@
-import 'dart:io';
-
 /// API配置
 class ApiConfig {
-  /// 私有变量存储API密钥
-  static String? geminiApiKey;
-
-  /// 初始化方法（需要在应用启动时调用）
-  static Future<void> initialize() async {
-    try {
-      final file = File('api.txt');
-      geminiApiKey = (await file.readAsString()).trim();
-    } catch (e) {
-      throw Exception('Failed to load API key: $e');
-    }
-  }
+  /// Gemini API密钥
+  static const String geminiApiKey = "<your gemini api key>";
   
   /// Gemini API端点
   static const String geminiApiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent";
@@ -23,12 +11,9 @@ class ApiConfig {
   
   /// 获取实际API密钥，在生产环境中可以使用其他方式获取
   static String getGeminiApiKey() {
-    if (geminiApiKey == null) {
-      throw Exception('API key not initialized. Call ApiConfig.initialize() first');
-    }
-    return geminiApiKey!;
     // 在实际应用中，可以使用更安全的方式获取API密钥
     // 例如从安全存储或环境变量中获取
+    return geminiApiKey;
   }
 }
 
