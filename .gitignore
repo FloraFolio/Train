@@ -48,10 +48,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# API 配置文件，包含敏感信息
-lib/config/api_config.dart
-bin/api_config.dart
-
 # Gemini API测试输出
 gemini_response.json
 plant_info.json

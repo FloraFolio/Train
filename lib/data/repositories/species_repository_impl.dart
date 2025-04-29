@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import 'package:flora_folio/data/models/species.dart';
 import 'package:flora_folio/data/repositories/species_repository.dart';
@@ -18,6 +17,7 @@ class SpeciesRepositoryImpl implements SpeciesRepository {
   Future<String> addSpecies({
     required String name,
     String? description,
+    String? introduction,
     String? taxonomyPath,
     Map<String, dynamic>? taxonomyData,
   }) async {
