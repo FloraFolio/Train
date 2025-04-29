@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flora_folio/data/repositories/plant_photo_repository_impl.dart';
 
 class HomePageContent extends StatefulWidget {
   const HomePageContent({super.key});
@@ -22,6 +23,8 @@ class _HomePageContentState extends State<HomePageContent> {
         _image = File(pickedFile.path);
       });
     }
+
+    addPlantPhoto(_image);
   }
 
   @override
