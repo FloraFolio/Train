@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:uuid/uuid.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:flora_folio/data/models/photo_status.dart';
 import 'package:flora_folio/data/models/plant_photo.dart';
 import 'package:flora_folio/data/repositories/plant_photo_repository.dart';
