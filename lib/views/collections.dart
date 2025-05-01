@@ -12,7 +12,6 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   int currentIndex = 0;
 
-  // 静态数据
   final List<Map<String, String>> listPlants = [
     {
       'photoId': '12345',
