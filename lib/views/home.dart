@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flora_folio/data/models/photo_status.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flora_folio/data/repositories/plant_photo_repository_impl.dart';
@@ -42,6 +43,25 @@ class _HomePageContentState extends State<HomePageContent> {
         );
       }
     }
+  }
+
+  // 显示最近一次的捕获内容
+  Future<Widget> _getLastImage() async{
+    final lastImages = await _photoRepository.getAllPhotos(limit: 1, sortOrder: SortOrder.newest);
+    if (lastImages.isEmpty){
+      return Center(
+        child: Text(
+          'No image captured yet.',
+          style: TextStyle(color: Colors.white),
+          textAlign: TextAlign.center,
+        ),
+      );
+    } 
+
+    // Get photoPath
+    final lastImageInfo = lastImages.first;
+    final _lastImage = File(lastImageInfo.photoPath);
+    return  Center(child: Image.file(_lastImage!, fit: BoxFit.contain));
   }
 
   @override
@@ -116,15 +136,14 @@ class _HomePageContentState extends State<HomePageContent> {
                   ],
                 ),
                 padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child:
-                      _image == null
-                          ? const Text(
-                            'No image captured yet.',
-                            style: TextStyle(color: Colors.white),
-                            textAlign: TextAlign.center,
-                          )
-                          : Image.file(_image!, fit: BoxFit.contain),
+                child: FutureBuilder(
+                  future: _getLastImage(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return snapshot.data ?? Container();
+                  },
                 ),
               ),
             ),
