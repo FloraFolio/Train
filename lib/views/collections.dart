@@ -91,7 +91,7 @@ class _ListPageState extends State<ListPage> {
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                      color: const Color.fromRGBO(0, 0, 0, 0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
