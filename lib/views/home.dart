@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flora_folio/data/models/photo_status.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flora_folio/data/repositories/plant_photo_repository_impl.dart';
+import 'package:flora_folio/providers/service_provider.dart';
 
 class HomePageContent extends StatefulWidget {
   const HomePageContent({super.key});
@@ -13,8 +13,8 @@ class HomePageContent extends StatefulWidget {
 
 class _HomePageContentState extends State<HomePageContent> {
   File? _image;
-  final PlantPhotoRepositoryImpl _photoRepository = PlantPhotoRepositoryImpl();
-
+  // final PlantPhotoRepositoryImpl _photoRepository = PlantPhotoRepositoryImpl();
+  final photoManager = ServiceProvider.instance.photoManagerService;
   // 打开相机拍照
   Future<void> _getImageFromCamera() async {
     final picker = ImagePicker();
@@ -28,7 +28,8 @@ class _HomePageContentState extends State<HomePageContent> {
       // Saving the photo to local and post it to gemini
       try {
         // 使用repository添加照片
-        final photoId = await _photoRepository.addPlantPhoto(photoFile: _image!);
+        // final photoId = await _photoRepository.addPlantPhoto(photoFile: _image!);
+        final photoId = await photoManager.processNewPhoto(_image!);
         print('Photo added successfully with ID: $photoId');
         
         // 这里可以添加其他逻辑（比如导航到结果页面）
@@ -47,7 +48,8 @@ class _HomePageContentState extends State<HomePageContent> {
 
   // 显示最近一次的捕获内容
   Future<Widget> _getLastImage() async{
-    final lastImages = await _photoRepository.getAllPhotos(limit: 1, sortOrder: SortOrder.newest);
+    // final lastImages = await _photoRepository.getAllPhotos(limit: 1, sortOrder: SortOrder.newest);
+    final lastImages = await photoManager.getAllPhotos(limit: 1, sortOrder: SortOrder.newest);
     if (lastImages.isEmpty){
       return Center(
         child: Text(
