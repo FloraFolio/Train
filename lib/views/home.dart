@@ -63,7 +63,7 @@ class _HomePageContentState extends State<HomePageContent> {
     // Get photoPath
     final lastImageInfo = lastImages.first;
     final _lastImage = File(lastImageInfo.photoPath);
-    return  Center(child: Image.file(_lastImage!, fit: BoxFit.contain));
+    return  Center(child: Image.file(_lastImage, fit: BoxFit.contain));
   }
 
   @override
