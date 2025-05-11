@@ -4,7 +4,7 @@ class ApiConfig {
   static const String geminiApiKey = "<your gemini api key>";
   
   /// Gemini API端点
-  static const String geminiApiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent";
+  static const String geminiApiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models";
   
   /// 是否为开发环境
   static const bool isDevelopment = true;

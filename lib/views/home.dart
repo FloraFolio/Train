@@ -28,9 +28,9 @@ class _HomePageContentState extends State<HomePageContent> {
       // Saving the photo to local and post it to gemini
       try {
         // 使用repository添加照片
-        // final photoId = await _photoRepository.addPlantPhoto(photoFile: _image!);
         final photoId = await photoManager.processNewPhoto(_image!);
         print('Photo added successfully with ID: $photoId');
+        setState(() {}); // Fresh current page.
         
         // 这里可以添加其他逻辑（比如导航到结果页面）
       } catch (e) {
