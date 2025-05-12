@@ -32,6 +32,7 @@ jobs:
           ln -s ../Runner.app
           cd ..
           zip -r app.ipa Payload
+
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
