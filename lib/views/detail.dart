@@ -26,6 +26,39 @@ class _DetailPageState extends State<DetailPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   }
 
+  String getFullChineseClassification(dynamic metadata) {
+    try {
+      final species = metadata['species'];
+      if (species is! Map) return '未知植物';
+
+      final levels = [
+        'kingdom',
+        'phylum',
+        'class',
+        'order',
+        'family',
+        'genus',
+        'species'
+      ];
+      final result = <String>[];
+
+      for (var level in levels) {
+        final node = species[level];
+        if (node is Map && node['chinese'] is String) {
+          result.add(node['chinese']);
+        } else if (node is List && node.isNotEmpty && node[0] is Map &&
+            node[0]['chinese'] is String) {
+          result.add(node[0]['chinese']);
+        } else {
+          result.add('未知');
+        }
+      }
+
+      return result.join(' ');
+    } catch (e) {
+      return '未知植物';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +107,11 @@ class _DetailPageState extends State<DetailPage> {
                             top: 8,
                             left: 60,
                             child: Text(
-                              'Plant Detail (${plantPhoto.photoId})',
+                              plantPhoto.metadata['species'] is Map &&
+                              plantPhoto.metadata['species']?['species'] is Map &&
+                              plantPhoto.metadata['species']?['species']?['chinese'] is String
+                              ? plantPhoto.metadata['species']['species']['chinese'] ?? '未知植物'
+                                  : '未知植物',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
@@ -117,7 +154,7 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      'Species: ${plantPhoto.speciesId ?? "Unknown"}',
+                                      'Species: ${getFullChineseClassification(plantPhoto.metadata)}',
                                       style: const TextStyle(color: Colors.white),
                                     ),
                                     const SizedBox(height: 10),
