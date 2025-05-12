@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'views/home.dart';
 import 'views/collections.dart';
 import 'views/settings.dart';
+// import 'package:flora_folio/providers/service_provider.dart';
 
 void main() {
+  // await ServiceProvider.instance.initialize();
   runApp(const MyApp());
 }
 

@@ -272,7 +272,7 @@ class GeminiPhotoAnalysisService implements PhotoAnalysisService {
     
     // API请求URI
     final uri = Uri.parse('$_apiEndpoint/$_model:generateContent?key=$_apiKey');
-    
+    print('The request GEmini URI is: $uri !!!!!!!!!!!!!!!!');
     // 构建请求体
     final requestBody = {
       'contents': [
