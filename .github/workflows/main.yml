@@ -1,9 +1,9 @@
 name: "Build & Release"
 on:
   pull_request:
-    branches: [main, master]
+    branches: [main, release]
   push:
-    branches: [main, master, develop]
+    branches: [main, release]
 
 jobs:
   build:
