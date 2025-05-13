@@ -74,6 +74,14 @@ class DatabaseHelper {
         created_at INTEGER NOT NULL
       )
     ''');
+
+    // User Setting table
+     await db.execute('''
+      CREATE TABLE settings (
+        key TEXT PRIMARY KEY,
+        value TEXT
+      )
+    ''');
   }
   
   /// 处理数据库升级
