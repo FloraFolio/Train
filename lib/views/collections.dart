@@ -66,9 +66,9 @@ class _ListPageState extends State<ListPage> {
               title: Text(
                 photos[currentIndex].metadata['species'] is Map &&
                     photos[currentIndex].metadata['species']?['species'] is Map &&
-                    photos[currentIndex].metadata['species']?['species']?['chinese'] is String
-                    ? photos[currentIndex].metadata['species']['species']['chinese'] ?? '未知植物'
-                    : '未知植物',
+                    photos[currentIndex].metadata['species']?['species']?['english'] is String
+                    ? photos[currentIndex].metadata['species']['species']['english'] ?? 'Unknown'
+                    : 'Unknown',
               ),
               backgroundColor: Colors.black87,
               foregroundColor: Colors.white,

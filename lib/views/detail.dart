@@ -29,7 +29,7 @@ class _DetailPageState extends State<DetailPage> {
   String getFullChineseClassification(dynamic metadata) {
     try {
       final species = metadata['species'];
-      if (species is! Map) return '未知植物';
+      if (species is! Map) return 'Unknown';
 
       final levels = [
         'kingdom',
@@ -50,13 +50,13 @@ class _DetailPageState extends State<DetailPage> {
             node[0]['chinese'] is String) {
           result.add(node[0]['chinese']);
         } else {
-          result.add('未知');
+          result.add('unknown');
         }
       }
 
       return result.join(' ');
     } catch (e) {
-      return '未知植物';
+      return 'Unknown';
     }
   }
   @override
@@ -109,9 +109,9 @@ class _DetailPageState extends State<DetailPage> {
                             child: Text(
                               plantPhoto.metadata['species'] is Map &&
                               plantPhoto.metadata['species']?['species'] is Map &&
-                              plantPhoto.metadata['species']?['species']?['chinese'] is String
-                              ? plantPhoto.metadata['species']['species']['chinese'] ?? '未知植物'
-                                  : '未知植物',
+                              plantPhoto.metadata['species']?['species']?['english'] is String
+                              ? plantPhoto.metadata['species']['species']['english'] ?? 'Unknown'
+                                  : 'Unknown',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
