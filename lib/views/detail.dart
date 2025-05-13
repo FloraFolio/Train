@@ -26,16 +26,13 @@ class _DetailPageState extends State<DetailPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   }
 
-  String getFullChineseClassification(dynamic metadata) {
+  String getFullClassification(dynamic metadata) {
     try {
       final species = metadata['species'];
-      if (species is! Map) return '未知植物';
+      if (species is! Map) return 'Unknown';
 
       final levels = [
         'kingdom',
-        'phylum',
-        'class',
-        'order',
         'family',
         'genus',
         'species'
@@ -44,19 +41,19 @@ class _DetailPageState extends State<DetailPage> {
 
       for (var level in levels) {
         final node = species[level];
-        if (node is Map && node['chinese'] is String) {
-          result.add(node['chinese']);
+        if (node is Map && node['english'] is String) {
+          result.add(node['english']);
         } else if (node is List && node.isNotEmpty && node[0] is Map &&
-            node[0]['chinese'] is String) {
-          result.add(node[0]['chinese']);
+            node[0]['english'] is String) {
+          result.add(node[0]['english']);
         } else {
-          result.add('未知');
+          result.add('unknown');
         }
       }
 
       return result.join(' ');
     } catch (e) {
-      return '未知植物';
+      return 'Unknown';
     }
   }
   @override
@@ -109,9 +106,9 @@ class _DetailPageState extends State<DetailPage> {
                             child: Text(
                               plantPhoto.metadata['species'] is Map &&
                               plantPhoto.metadata['species']?['species'] is Map &&
-                              plantPhoto.metadata['species']?['species']?['chinese'] is String
-                              ? plantPhoto.metadata['species']['species']['chinese'] ?? '未知植物'
-                                  : '未知植物',
+                              plantPhoto.metadata['species']?['species']?['english'] is String
+                              ? plantPhoto.metadata['species']['species']['english'] ?? 'Unknown'
+                                  : 'Unknown',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
@@ -154,7 +151,7 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      'Species: ${getFullChineseClassification(plantPhoto.metadata)}',
+                                      'Species: ${getFullClassification(plantPhoto.metadata)}',
                                       style: const TextStyle(color: Colors.white),
                                     ),
                                     const SizedBox(height: 10),
