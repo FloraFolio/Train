@@ -31,11 +31,11 @@ class GeminiPhotoAnalysisService implements PhotoAnalysisService {
       
       // 使用更结构化的提示词
       final prompt = """请分析这张植物图片，并以JSON格式返回以下信息：
-1. species: 植物的界门科目纲属种，Json格式，每个分类级别请提供中文和拉丁学名（如有）
+1. species: 植物的界门科目纲属种，Json格式，每个分类级别请提供英文和拉丁学名（如有）
 2. introduction: 植物的简介，包含植物分类、原产地、用途等
 3. detailed_description: 图片中的植物详细描述，越详细越好，这块儿不用分点，合在一起描述就行
 
-请以JSON格式返回，确保键名为英文，值为中文描述。不要添加任何JSON外的说明文字。""";
+请以JSON格式返回，确保键名为英文，值也为英文描述。不要添加任何JSON外的说明文字。""";
 
       // 调用Gemini API
       final textResponse = await _generateContent(
