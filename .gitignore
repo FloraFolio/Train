@@ -60,3 +60,5 @@ lib/config/api_config.dart
 macos/
 test/
 flora_folio.db
+ios/Podfile.lock
+ios/Runner.xcodeproj/project.pbxproj
