@@ -17,6 +17,9 @@ When you compile the code remember copy the `/lib/config/api_config.example.dart
 
 And add your gemini API to the correspond place.  
 
+## App preview
+![image](https://github.com/user-attachments/assets/a75c0ae7-21ef-494b-bb4b-dfa25a9dd982)
+
 
 ## Key Features
 🌿 **AI-Powered Plant Identification**  
