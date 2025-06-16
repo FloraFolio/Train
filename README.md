@@ -50,7 +50,7 @@ And add your gemini API to the correspond place.
 
 ## Prototype
 Explore our working prototype available for download:
-[Prototype Releases](https://github.com/Iwan-LMX/FloraFolio/releases)
+[Prototype Releases](https://github.com/FloraFolio/Train/releases)
 
 ## Future Roadmap
 - Cloud account integration (Firebase Auth/AWS Cognito)
